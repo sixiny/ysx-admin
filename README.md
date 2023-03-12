@@ -1,4 +1,3 @@
-# 工程简介
+# Spring Security + SpringBoot + Mybatis-plus集成的权限管理系统
 
-# 延伸阅读
 
