@@ -70,7 +70,7 @@ public class SysUserController {
      * @return
      */
     @ApiOperation("添加或修改用户信息")
-    @RequestMapping("/save")
+    @PostMapping("/save")
     @PreAuthorize("hasAnyAuthority('system:user:add','system:user:edit')")
     public R addOrEditUser(@RequestBody SysUser user){
         if(user.getId()==null || user.getId()==-1){
@@ -185,7 +185,7 @@ public class SysUserController {
      * @throws Exception
      */
     @ApiOperation("上传用户头像")
-    @RequestMapping("/uploadImage")
+    @PostMapping("/uploadImage")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public Map<String,Object> uploadImage(MultipartFile file)throws Exception{
         Map<String,Object> resultMap=new HashMap<>();
@@ -211,7 +211,7 @@ public class SysUserController {
      * @return
      */
     @ApiOperation("修改头像")
-    @RequestMapping("/updateAvatar")
+    @PostMapping("/updateAvatar")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public R updateAvatar(@RequestBody SysUser sysUser){
         SysUser currentUser = userService.getById(sysUser.getId());

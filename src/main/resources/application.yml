@@ -8,8 +8,8 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/db_admin3?serverTimezone=Asia/Shanghai
-    username: 
-    password: 
+    username: root
+    password: ysx52smile...!
   redis: # redis配置
     host: 127.0.0.1 # IP
     port: 6379  # 端口

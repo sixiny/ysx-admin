@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -16,6 +18,7 @@ import javax.validation.constraints.NotBlank;
  * 
  * @TableName sys_user
  */
+@ApiModel("用户实体类")
 @TableName(value ="sys_user")
 @Data
 public class SysUser extends BaseEntity implements Serializable {
@@ -66,12 +69,14 @@ public class SysUser extends BaseEntity implements Serializable {
     /**
      *旧密码
      */
+    @ApiModelProperty("更新密码时寄存旧密码(未加密)")
     @TableField(exist = false)
     private String oldPassword;
 
     /**
      * 新密码
      */
+    @ApiModelProperty("更新密码时寄存新密码")
     @TableField(exist = false)
     private String newPassword;
 

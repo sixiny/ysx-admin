@@ -43,7 +43,7 @@ public class SysMenuController {
      * @return
      */
     @ApiOperation("获取权限树")
-    @RequestMapping("/treeList")
+    @GetMapping("/treeList")
     @PreAuthorize("hasAuthority('system:menu:query')")
     public R treeList(){
         // 查询所有菜单信息

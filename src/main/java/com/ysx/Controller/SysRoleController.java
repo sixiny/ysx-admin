@@ -73,7 +73,7 @@ public class SysRoleController {
      * 添加或者修改
      */
     @ApiOperation("添加角色和修改角色")
-    @RequestMapping("/save")
+    @PostMapping("/save")
     @PreAuthorize("hasAnyAuthority('system:role:add','system:role:edit')")
     public R addOrUpdate(@RequestBody SysRole role){
         if(role.getId()==null||role.getId()==-1){
@@ -119,7 +119,7 @@ public class SysRoleController {
      * 根据角色id查询相关权限
      */
     @ApiOperation("根据角色id查询权限")
-    @RequestMapping("/menus/{id}")
+    @GetMapping("/menus/{id}")
     @PreAuthorize("hasAuthority('system:role:menu')")
     public R getRoleMenus(@PathVariable("id") Long id){
         List<SysRoleMenu> roleMenus = roleMenuService.list(new QueryWrapper<SysRoleMenu>().eq("role_id", id));
