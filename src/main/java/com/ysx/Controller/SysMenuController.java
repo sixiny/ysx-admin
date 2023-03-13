@@ -8,6 +8,8 @@ import com.ysx.pojo.SysMenu;
 import com.ysx.service.SysMenuService;
 import com.ysx.service.SysRoleService;
 import com.ysx.util.RedisUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ import java.util.List;
  * @Date: 2023/03/10/21:40
  * @Description:
  */
-@CrossOrigin
+@Api("权限菜单管理")
 @RestController
 @RequestMapping("/sys/menu")
 public class SysMenuController {
@@ -40,6 +42,7 @@ public class SysMenuController {
      * 查询所有菜单树信息
      * @return
      */
+    @ApiOperation("获取权限树")
     @RequestMapping("/treeList")
     @PreAuthorize("hasAuthority('system:menu:query')")
     public R treeList(){
@@ -54,6 +57,7 @@ public class SysMenuController {
      * @param id
      * @return
      */
+    @ApiOperation("根据id查询权限")
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('system:menu:query')")
     public R findById(@PathVariable Long id){
@@ -66,6 +70,7 @@ public class SysMenuController {
      * @param sysMenu
      * @return
      */
+    @ApiOperation("添加或修改权限信息")
     @PostMapping("/save")
     @PreAuthorize("hasAuthority('system:menu:add')"+"||"+"hasAuthority('system:menu:edit')")
     public R save(@RequestBody SysMenu sysMenu){
@@ -89,6 +94,7 @@ public class SysMenuController {
      * @param id
      * @return
      */
+    @ApiOperation("根据id删除权限")
     @GetMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('system:menu:delete')")
     public R delete(@PathVariable Long id){

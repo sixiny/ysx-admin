@@ -47,7 +47,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             "/captcha",
             "/password",
             "/image/**",
-            "/test/**"
+            "/test/**",
     } ;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {

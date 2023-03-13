@@ -8,6 +8,8 @@ import com.ysx.service.SysRoleMenuService;
 import com.ysx.service.SysRoleService;
 import com.ysx.util.RedisUtil;
 import com.ysx.util.StringUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -26,7 +28,7 @@ import java.util.stream.Collectors;
  * @Date: 2023/03/10/20:15
  * @Description:
  */
-@CrossOrigin
+@Api("角色管理")
 @RestController
 @RequestMapping("/sys/role")
 public class SysRoleController {
@@ -40,7 +42,7 @@ public class SysRoleController {
     @Autowired
     private RedisUtil redisUtil;
 
-    // roleList
+    @ApiOperation("查询全部角色")
     @GetMapping("/listAll")
     @PreAuthorize("hasAuthority('system:role:query')")
     public R listAll(){
@@ -53,10 +55,11 @@ public class SysRoleController {
     /**
      * 分页查询
      */
+    @ApiOperation("分页查询角色")
     @PostMapping("/list")
     @PreAuthorize("hasAuthority('system:role:query')")
     public R list(@RequestBody PageBean pageBean){
-        System.out.println("pageBean:"+pageBean);
+//        System.out.println("pageBean:"+pageBean);
         String query=pageBean.getQuery().trim();
         Page<SysRole> pageResult = roleService.page(new Page<>(pageBean.getPageNum(),pageBean.getPageSize()), new QueryWrapper<SysRole>().like(StringUtil.isNotEmpty(query), "name", query));
         List<SysRole> roleList = pageResult.getRecords();
@@ -69,6 +72,7 @@ public class SysRoleController {
     /**
      * 添加或者修改
      */
+    @ApiOperation("添加角色和修改角色")
     @RequestMapping("/save")
     @PreAuthorize("hasAnyAuthority('system:role:add','system:role:edit')")
     public R addOrUpdate(@RequestBody SysRole role){
@@ -84,10 +88,10 @@ public class SysRoleController {
         return R.ok();
     }
 
-
     /**
      * 根据id查找
      */
+    @ApiOperation("根据id查询角色")
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('system:role:query')")
     public R selectRoleById(@PathVariable("id") Long id){
@@ -100,6 +104,7 @@ public class SysRoleController {
     /**
      *  删除权限
      */
+    @ApiOperation("删除角色")
     @Transactional
     @PostMapping("/delete")
     @PreAuthorize("hasAuthority('system:role:delete')")
@@ -110,11 +115,10 @@ public class SysRoleController {
         return R.ok();
     }
 
-
-
     /**
      * 根据角色id查询相关权限
      */
+    @ApiOperation("根据角色id查询权限")
     @RequestMapping("/menus/{id}")
     @PreAuthorize("hasAuthority('system:role:menu')")
     public R getRoleMenus(@PathVariable("id") Long id){
@@ -123,10 +127,10 @@ public class SysRoleController {
         return R.ok().put("menuIdList",menuIds);
     }
 
-
     /**
      * 更新角色分配权限
      */
+    @ApiOperation("重新分配角色权限后更新角色权限")
     @Transactional
     @PostMapping("/updateMenus/{id}")
     @PreAuthorize("hasAuthority('system:role:menu')")
@@ -144,6 +148,4 @@ public class SysRoleController {
         redisUtil.removeByPrex(Constant.AUTHORITY_KEY);
         return R.ok();
     }
-
-
 }

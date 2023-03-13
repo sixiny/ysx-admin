@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -78,7 +79,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf()
                 .disable()
-
                 // 登录登出配置
                 .formLogin()
                 .successHandler(loginSuccessHandler)
@@ -86,30 +86,41 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutSuccessHandler(logoutHandler)
-
                 // session禁用配置
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)  // 无状态
-
                 // 拦截规则配置
                 .and()
                 .authorizeRequests()
                 .antMatchers(URL_WHITELIST).permitAll()  // 白名单 放行
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/v2/*").permitAll()
+                .antMatchers("/csrf").permitAll()
+                .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
-
-
                 // 异常处理配置
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-
                 // 自定义过滤器配置
                 .and()
                 .addFilter(jwtAuthenticationFilter())
                 .addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class);
-
-
     }
+
+    //放行swagger 2所需要的静态资源
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        //所需要用到的静态资源，允许访问
+//        web.ignoring().antMatchers( "/swagger-ui.html",
+//                "/swagger-ui/*",
+//                "/swagger-resources/**",
+//                "/v2/api-docs",
+//                "/v3/api-docs",
+//                "/webjars/**");
+//    }
 }
 

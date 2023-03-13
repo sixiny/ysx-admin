@@ -6,6 +6,8 @@ import com.ysx.common.constant.Constant;
 import com.ysx.pojo.R;
 import com.ysx.util.RedisUtil;
 import com.ysx.pojo.R;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,7 @@ import java.util.UUID;
 /**
  * 验证码Controller控制器
  */
+@Api("验证码控制器")
 @RestController
 public class CaptchaController {
 
@@ -31,6 +34,8 @@ public class CaptchaController {
     @Autowired
     private RedisUtil redisUtil;
 
+
+    @ApiOperation(value="captcha", notes="生成验证码")
     @GetMapping("/captcha")
     public R captcha() throws IOException {
         String key= UUID.randomUUID().toString(); // 生成随机唯一key

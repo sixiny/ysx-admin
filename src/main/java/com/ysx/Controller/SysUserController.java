@@ -13,11 +13,14 @@ import com.ysx.service.SysUserRoleService;
 import com.ysx.service.SysUserService;
 import com.ysx.util.DateUtil;
 import com.ysx.util.RedisUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import jdk.internal.org.objectweb.asm.Handle;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -36,7 +39,7 @@ import java.util.*;
  * @Date: 2023/03/08/21:01
  * @Description:  用户管理controller
  */
-@CrossOrigin
+@Api("用户管理")
 @RestController
 @RequestMapping("/sys/user")
 public class SysUserController {
@@ -66,6 +69,7 @@ public class SysUserController {
      * 用户修改或者添加信息
      * @return
      */
+    @ApiOperation("添加或修改用户信息")
     @RequestMapping("/save")
     @PreAuthorize("hasAnyAuthority('system:user:add','system:user:edit')")
     public R addOrEditUser(@RequestBody SysUser user){
@@ -73,24 +77,22 @@ public class SysUserController {
             user.setCreateTime(new Date());
             user.setPassword(encoder.encode(user.getPassword()));
             userService.save(user);
-
         }else{
-            //修改\
+            //修改
             user.setUpdateTime(new Date());
             // 根据updateWrapper数据更新数据
             userService.update(user, new UpdateWrapper<SysUser>().eq("id", user.getId()));
-
         }
         redisUtil.removeByPrex(Constant.AUTHORITY_KEY);
         return R.ok();
     }
-
 
     /**
      * 修改密码
      * @param user
      * @return
      */
+    @ApiOperation("修改密码")
     @PostMapping("/updateUserPwd")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public R updateUserPwd(@RequestBody SysUser user){
@@ -111,6 +113,7 @@ public class SysUserController {
      * @param id
      * @return
      */
+    @ApiOperation("根据id查询用户")
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('system:user:query')")
     public R findUserById(@PathVariable("id")Integer id){
@@ -123,6 +126,7 @@ public class SysUserController {
     /**
      * 验证用户名  新建用户时验证用户名是否可用
      */
+    @ApiOperation("验证用户名是不是已经存在")
     @PostMapping("/checkUserName")
     @PreAuthorize("hasAuthority('system:user:query')")
     public R checkUserName(@RequestBody SysUser user){
@@ -136,6 +140,7 @@ public class SysUserController {
     /**
      *  删除用户
      */
+    @ApiOperation("删除用户")
     @Transactional
     @PostMapping("/delete")
     @PreAuthorize("hasAuthority('system:user:delete')")
@@ -150,6 +155,7 @@ public class SysUserController {
     /**
      * 密码重置
      */
+    @ApiOperation("重置密码")
     @GetMapping("/resetPassword/{id}")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public R resetPassword(@PathVariable("id") Long id){
@@ -162,6 +168,7 @@ public class SysUserController {
     /**
      * 更新statues
      */
+    @ApiOperation("更新用户状态")
     @GetMapping("/updateStatus/{id}/status/{status}")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public R updateStatus(@PathVariable("id") Long id, @PathVariable("status") String status){
@@ -177,6 +184,7 @@ public class SysUserController {
      * @return
      * @throws Exception
      */
+    @ApiOperation("上传用户头像")
     @RequestMapping("/uploadImage")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public Map<String,Object> uploadImage(MultipartFile file)throws Exception{
@@ -202,6 +210,7 @@ public class SysUserController {
      * @param sysUser
      * @return
      */
+    @ApiOperation("修改头像")
     @RequestMapping("/updateAvatar")
     @PreAuthorize("hasAuthority('system:user:edit')")
     public R updateAvatar(@RequestBody SysUser sysUser){
@@ -215,6 +224,7 @@ public class SysUserController {
     /**
      *  根据条件分页查询
      */
+    @ApiOperation("用户分页查询")
     @PostMapping("/list")
     @PreAuthorize("hasAuthority('system:user:query')")
     public R list(@RequestBody PageBean pageBean){
@@ -235,6 +245,7 @@ public class SysUserController {
     /**
      * 用戶授權 給用戶分配權限
      */
+    @ApiOperation("给用户分配权限后 更新权限")
     @Transactional
     @PostMapping("/grantRole/{userId}")
     @PreAuthorize("hasAuthority('system:user:role')")
